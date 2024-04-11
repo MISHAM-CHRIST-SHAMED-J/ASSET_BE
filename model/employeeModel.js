@@ -1,19 +1,32 @@
-import sequelize from "../utility/database";
+import { DataTypes } from "sequelize";
+import sequelize from "../utility/database.js";
 
-const Employee = sequelize.define("employee", {
+const Employee = sequelize.define("employee_master", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  assignedAt: {
-    type: DataTypes.DATE,
+  emp_id: {
+    type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: DataTypes.NOW,
   },
-  returnedAt: {
-    type: DataTypes.DATE,
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
   },
 });
 
-module.exports = Employee;
+export default Employee;

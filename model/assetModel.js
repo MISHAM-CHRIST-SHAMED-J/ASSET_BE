@@ -1,7 +1,7 @@
-import sequelize from "../utility/database";
-import DataTypes from "sequelize";
+import { DataTypes } from "sequelize";
+import sequelize from "../utility/database.js";
 
-const Asset = sequelize.define("asset", {
+const Asset = sequelize.define("asset_master", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -11,19 +11,34 @@ const Asset = sequelize.define("asset", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  lastName: {
+  make: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  email: {
+  model: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+  },
+  asset_type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  asset_category: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   status: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+  isScrap: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  already_issued: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
-module.exports = Asset;
+export default Asset;

@@ -1,13 +1,13 @@
-import Asset from "../model/assetModel.js";
+import Employee from "../model/employeeModel.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
 
-const addAsset = async (req, res) => {
+const addEmployee = async (req, res) => {
   try {
     let payload = req.body;
-    const newUser = await Asset.create(payload);
+    const newUser = await Employee.create(payload);
     if (newUser.dataValues.status == true) {
       res.status(STATUS_CODE.success).json({
-        message: "Asset added successfully",
+        message: "Employee added successfully",
         status: true,
       });
     } else {
@@ -24,11 +24,11 @@ const addAsset = async (req, res) => {
   }
 };
 
-const getAsset = async (req, res) => {
+const getEmployee = async (req, res) => {
   try {
     let { page, limit } = req.query;
-    const { count, rows } = await Asset.findAndCountAll({
-      where: { status: true, isScrap: false },
+    const { count, rows } = await Employee.findAndCountAll({
+      where: { status: true },
       limit: Number(limit),
       offset: (Number(page) - 1) * Number(limit),
     });
@@ -36,7 +36,7 @@ const getAsset = async (req, res) => {
       (assetInstance) => assetInstance.dataValues
     );
     res.status(STATUS_CODE.success).json({
-      message: "Asset Fetched Successfully",
+      message: "Employee Fetched Successfully",
       data: assetDataArray,
       count: count,
       status: true,
@@ -49,11 +49,11 @@ const getAsset = async (req, res) => {
   }
 };
 
-const editAsset = async (req, res) => {
+const editEmployee = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Asset.update(
+    await Employee.update(
       (payload,
       {
         where: {
@@ -62,7 +62,7 @@ const editAsset = async (req, res) => {
       })
     );
     res.status(STATUS_CODE.success).json({
-      message: "Asset Updated Successfully",
+      message: "Employee Updated Successfully",
       status: true,
     });
   } catch (error) {
@@ -73,11 +73,11 @@ const editAsset = async (req, res) => {
   }
 };
 
-const deleteAsset = async (req, res) => {
+const deleteEmployee = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Asset.update(
+    await Employee.update(
       (payload,
       {
         where: {
@@ -97,4 +97,4 @@ const deleteAsset = async (req, res) => {
   }
 };
 
-export { addAsset, getAsset, editAsset, deleteAsset };
+export { addEmployee, getEmployee, editEmployee, deleteEmployee };

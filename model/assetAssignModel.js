@@ -1,4 +1,5 @@
-import sequelize from "../utility/database";
+import { DataTypes } from "sequelize";
+import sequelize from "../utility/database.js";
 
 const AssetAssignment = sequelize.define("asset_assignment", {
   id: {
@@ -6,17 +7,30 @@ const AssetAssignment = sequelize.define("asset_assignment", {
     primaryKey: true,
     autoIncrement: true,
   },
-  assignedAt: {
-    type: DataTypes.DATE,
+  employee_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: DataTypes.NOW,
   },
-  returnedAt: {
-    type: DataTypes.DATE,
+  asset_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  assign_date: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  return_date: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  remarks: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
   },
 });
 
-Asset.belongsToMany(Employee, { through: AssetAssignment });
-Employee.belongsToMany(Asset, { through: AssetAssignment });
-
-module.exports = AssetAssignment;
+export default AssetAssignment;
