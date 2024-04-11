@@ -4,9 +4,6 @@ node_modules
 # Ignore log files
 *.log
 
-# Ignore macOS system files
-.DS_Store
-
 # Ignore environment-specific configuration files
 .env
 
@@ -22,6 +19,4 @@ npm-debug.log
 # Ignore yarn error log
 yarn-error.log
 
-# Ignore dist directories
-dist/
-build/
+
