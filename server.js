@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import router from "./router/router.js";
+import AssetMgt from "./router/router.js";
 import sequelize from "./utility/database.js";
 dotenv.config();
 
@@ -10,7 +10,7 @@ const app = express();
 app.use(json());
 app.use(cors({ origin: "*" }));
 
-app.use("/api", router);
+app.use("/api", AssetMgt);
 
 sequelize
   .sync()
