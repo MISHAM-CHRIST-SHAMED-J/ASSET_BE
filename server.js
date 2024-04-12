@@ -18,6 +18,7 @@ sequelize
     console.log("Database synced");
   })
   .catch((err) => {
+    console.log(err);
     console.error("Error syncing database", err);
   });
 

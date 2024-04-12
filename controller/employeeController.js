@@ -81,20 +81,19 @@ const searchEmployee = async (req, res) => {
   }
 };
 
-const editEmployee = async (req, res) => {
+const deleteEmployee = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Employee.update(
-      (payload,
-      {
-        where: {
-          id: id.id,
-        },
-      })
-    );
+    await Employee.update(payload, {
+      where: {
+        id: id.id,
+      },
+    });
     res.status(STATUS_CODE.success).json({
-      message: "Employee Updated Successfully",
+      message: `Employee ${
+        payload.status ? "Activated" : "De-Activated"
+      } Successfully`,
       status: true,
     });
   } catch (error) {
@@ -105,20 +104,17 @@ const editEmployee = async (req, res) => {
   }
 };
 
-const deleteEmployee = async (req, res) => {
+const editEmployee = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Employee.update(
-      (payload,
-      {
-        where: {
-          id: id.id,
-        },
-      })
-    );
+    await Employee.update(payload, {
+      where: {
+        id: id.id,
+      },
+    });
     res.status(STATUS_CODE.success).json({
-      message: "Changes Made Successfully",
+      message: "Employee Updated Successfully",
       status: true,
     });
   } catch (error) {

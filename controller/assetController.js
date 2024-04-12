@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Asset from "../model/assetModel.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
 
@@ -26,9 +27,10 @@ const addAsset = async (req, res) => {
 
 const getAsset = async (req, res) => {
   try {
-    let { page, limit } = req.query;
+    let { page, limit, status } = req.query;
     const { count, rows } = await Asset.findAndCountAll({
-      where: { status: true, isScrap: false },
+      where: { status: status, isScrap: false },
+      order: [["createdAt", "DESC"]],
       limit: Number(limit),
       offset: (Number(page) - 1) * Number(limit),
     });
@@ -49,18 +51,45 @@ const getAsset = async (req, res) => {
   }
 };
 
+const searchAsset = async (req, res) => {
+  try {
+    let { search } = req.query;
+    const result = await Asset.findAll({
+      where: {
+        [Op.or]: [
+          { unique_id: { [Op.like]: `%${search}%` } },
+          { serial_no: { [Op.like]: `%${search}%` } },
+          { make: { [Op.like]: `%${search}%` } },
+          { model: { [Op.like]: `%${search}%` } },
+        ],
+      },
+    });
+
+    const assetDataArray = result.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+    res.status(STATUS_CODE.success).json({
+      message: "Asset Fetched Successfully",
+      data: assetDataArray,
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
 const editAsset = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Asset.update(
-      (payload,
-      {
-        where: {
-          id: id.id,
-        },
-      })
-    );
+    await Asset.update(payload, {
+      where: {
+        id: id.id,
+      },
+    });
     res.status(STATUS_CODE.success).json({
       message: "Asset Updated Successfully",
       status: true,
@@ -77,16 +106,13 @@ const deleteAsset = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Asset.update(
-      (payload,
-      {
-        where: {
-          id: id.id,
-        },
-      })
-    );
+    await Asset.update(payload, {
+      where: {
+        id: id.id,
+      },
+    });
     res.status(STATUS_CODE.success).json({
-      message: "Changes Made Successfully",
+      message: "Asset Deleted Successfully",
       status: true,
     });
   } catch (error) {
@@ -97,4 +123,4 @@ const deleteAsset = async (req, res) => {
   }
 };
 
-export { addAsset, getAsset, editAsset, deleteAsset };
+export { addAsset, getAsset, editAsset, deleteAsset, searchAsset };

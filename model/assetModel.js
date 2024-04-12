@@ -11,6 +11,10 @@ const Asset = sequelize.define("asset_master", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  unique_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   make: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,11 +23,27 @@ const Asset = sequelize.define("asset_master", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  asset_type: {
+  asset_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   asset_category: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  asset_description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  purchase_date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  scrap_date: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  asset_location: {
     type: DataTypes.STRING,
     allowNull: false,
   },
