@@ -5,6 +5,7 @@ import {
   getEmployee,
   editEmployee,
   deleteEmployee,
+  searchEmployee,
 } from "../controller/employeeController.js";
 
 const router = express.Router();
@@ -14,6 +15,8 @@ router.post("/add_asset", addAsset);
 router.get("/get_asset", getAsset);
 /*Employee_Master*/
 router.post("/add_employee", addEmployee);
+router.get("/get_employee", getEmployee);
+router.get("/search_employee", searchEmployee);
 /*Asset_Master*/
 /*Asset_Master*/
 /*Asset_Master*/

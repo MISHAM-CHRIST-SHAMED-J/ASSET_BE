@@ -1,5 +1,6 @@
 import Employee from "../model/employeeModel.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
+import { Op } from "sequelize";
 
 const addEmployee = async (req, res) => {
   try {
@@ -26,9 +27,10 @@ const addEmployee = async (req, res) => {
 
 const getEmployee = async (req, res) => {
   try {
-    let { page, limit } = req.query;
+    let { page, limit, status } = req.query;
     const { count, rows } = await Employee.findAndCountAll({
-      where: { status: true },
+      where: { status: status },
+      order: [["createdAt", "DESC"]],
       limit: Number(limit),
       offset: (Number(page) - 1) * Number(limit),
     });
@@ -39,6 +41,36 @@ const getEmployee = async (req, res) => {
       message: "Employee Fetched Successfully",
       data: assetDataArray,
       count: count,
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
+const searchEmployee = async (req, res) => {
+  try {
+    let { search } = req.query;
+    const result = await Employee.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${search}%` } },
+          { emp_id: { [Op.like]: `%${search}%` } },
+          { phone: { [Op.like]: `%${search}%` } },
+          { email_id: { [Op.like]: `%${search}%` } },
+        ],
+      },
+    });
+
+    const assetDataArray = result.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+    res.status(STATUS_CODE.success).json({
+      message: "Employee Fetched Successfully",
+      data: assetDataArray,
       status: true,
     });
   } catch (error) {
@@ -97,4 +129,10 @@ const deleteEmployee = async (req, res) => {
   }
 };
 
-export { addEmployee, getEmployee, editEmployee, deleteEmployee };
+export {
+  addEmployee,
+  getEmployee,
+  editEmployee,
+  deleteEmployee,
+  searchEmployee,
+};
