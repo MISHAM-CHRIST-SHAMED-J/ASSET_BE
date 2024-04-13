@@ -64,15 +64,16 @@ const test = async (req, res) => {
     //   type: AssetAssignment.QueryTypes.SELECT,
     // });
     const r = await sequelize.query(
-      'SELECT * FROM "asset_masters"',
+      "SELECT *, e.name AS employee_name, a.asset_name FROM asset_assignments aa JOIN employee_masters e ON e.id = aa.id JOIN asset_masters a ON a.id = aa.id;",
       {
         // replacements: { age: 18 }, // Replace :age with the value 18
         type: sequelize.QueryTypes.SELECT, // Specify the query type as SELECT
       }
     );
-    console.log(r );
+    console.log(r);
     res.status(STATUS_CODE.success).json({
       message: "Asset Category Deleted Successfully",
+      data: r,
       status: true,
     });
   } catch (error) {
@@ -154,7 +155,7 @@ const test = async (req, res) => {
 export {
   addAssetIssue,
   test,
-  getAssetIssue
+  getAssetIssue,
   //   editAssetCategory,
   //   deleteAssetCategory,
   //   getAssetCategory,
