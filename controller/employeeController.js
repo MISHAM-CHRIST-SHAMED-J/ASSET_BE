@@ -51,6 +51,28 @@ const getEmployee = async (req, res) => {
   }
 };
 
+const getEmployeeDropDown = async (req, res) => {
+  try {
+    const rows = await Employee.findAll({
+      where: { status: true },
+      order: [["createdAt", "DESC"]],
+    });
+    const assetDataArray = rows.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+    res.status(STATUS_CODE.success).json({
+      message: "Employee Fetched Successfully",
+      data: assetDataArray,
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
 const searchEmployee = async (req, res) => {
   try {
     let { search } = req.query;
@@ -131,4 +153,5 @@ export {
   editEmployee,
   deleteEmployee,
   searchEmployee,
+  getEmployeeDropDown,
 };

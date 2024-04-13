@@ -51,6 +51,28 @@ const getAsset = async (req, res) => {
   }
 };
 
+const getAssetDropDown = async (req, res) => {
+  try {
+    const rows = await Asset.findAll({
+      where: { status: true, isScrap: false },
+      order: [["createdAt", "DESC"]],
+    });
+    const assetDataArray = rows.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+    res.status(STATUS_CODE.success).json({
+      message: "Asset Fetched Successfully",
+      data: assetDataArray,
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
 const searchAsset = async (req, res) => {
   try {
     let { search } = req.query;
@@ -123,4 +145,4 @@ const deleteAsset = async (req, res) => {
   }
 };
 
-export { addAsset, getAsset, editAsset, deleteAsset, searchAsset };
+export { addAsset, getAsset, editAsset, deleteAsset, searchAsset,getAssetDropDown };

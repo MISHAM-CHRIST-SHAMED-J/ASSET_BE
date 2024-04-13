@@ -7,25 +7,41 @@ const AssetAssignment = sequelize.define("asset_assignment", {
     primaryKey: true,
     autoIncrement: true,
   },
-  employee_id: {
+  empRef_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  asset_id: {
+  empRef_name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  assetRef_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  assign_date: {
+  assetRef_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  return_date: {
-    type: DataTypes.STRING,
+  asset_issue_date: {
+    type: DataTypes.DATE,
     allowNull: false,
+  },
+  asset_return_date: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
   remarks: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+  },
+  reason: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  isReturned: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   status: {
     type: DataTypes.BOOLEAN,
