@@ -1,10 +1,20 @@
+import { Op } from "sequelize";
 import AssetAssignment from "../model/assetAssignModel.js";
+import Asset from "../model/assetModel.js";
 import sequelize from "../utility/database.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
 
 const addAssetIssue = async (req, res) => {
   try {
     let payload = req.body;
+    await Asset.update(
+      { already_issued: true },
+      {
+        where: {
+          id: payload.assetRef_id,
+        },
+      }
+    );
     const newUser = await AssetAssignment.create(payload);
     if (newUser.dataValues.status == true) {
       res.status(STATUS_CODE.success).json({
@@ -17,6 +27,85 @@ const addAssetIssue = async (req, res) => {
         status: true,
       });
     }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
+const editAssetIssue = async (req, res) => {
+  try {
+    let { id } = req.query;
+    let payload = req.body;
+    let check = await AssetAssignment.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (check.dataValues.assetRef_id !== payload.assetRef_id) {
+      await AssetAssignment.update(payload, {
+        where: {
+          id: id,
+        },
+      });
+      await Asset.update(
+        { already_issued: true },
+        {
+          where: {
+            id: payload.assetRef_id,
+          },
+        }
+      );
+      await Asset.update(
+        { already_issued: false },
+        {
+          where: {
+            id: check.dataValues.assetRef_id,
+          },
+        }
+      );
+    } else {
+      await AssetAssignment.update(payload, {
+        where: {
+          id: id,
+        },
+      });
+    }
+    res.status(STATUS_CODE.success).json({
+      message: "Issued Asset Updated Successfully",
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
+const resturnIssuedAsset = async (req, res) => {
+  try {
+    let { id, assetRef_id } = req.query;
+    let payload = req.body;
+    await AssetAssignment.update(payload, {
+      where: {
+        id: id,
+      },
+    });
+    await Asset.update(
+      { already_issued: false },
+      {
+        where: {
+          id: assetRef_id,
+        },
+      }
+    );
+    res.status(STATUS_CODE.success).json({
+      message: "Asset Returned Successfully",
+      status: true,
+    });
   } catch (error) {
     console.log(error);
     res
@@ -51,29 +140,24 @@ const getAssetIssue = async (req, res) => {
   }
 };
 
-const test = async (req, res) => {
+const searchAssetIssue = async (req, res) => {
   try {
-    let id = req.query;
-    let payload = req.body;
-    // await AssetCategory.update(payload, {
-    //   where: {
-    //     id: id.id,
-    //   },
-    // });
-    // let a = await AssetAssignment.query("select * from asset_assignments", {
-    //   type: AssetAssignment.QueryTypes.SELECT,
-    // });
-    const r = await sequelize.query(
-      "SELECT *, e.name AS employee_name, a.asset_name FROM asset_assignments aa JOIN employee_masters e ON e.id = aa.id JOIN asset_masters a ON a.id = aa.id;",
-      {
-        // replacements: { age: 18 }, // Replace :age with the value 18
-        type: sequelize.QueryTypes.SELECT, // Specify the query type as SELECT
-      }
+    let { search } = req.query;
+    const result = await AssetAssignment.findAll({
+      where: {
+        [Op.or]: [
+          { empRef_name: { [Op.like]: `%${search}%` } },
+          { assetRef_name: { [Op.like]: `%${search}%` } },
+        ],
+      },
+    });
+
+    const assetDataArray = result.map(
+      (assetInstance) => assetInstance.dataValues
     );
-    console.log(r);
     res.status(STATUS_CODE.success).json({
-      message: "Asset Category Deleted Successfully",
-      data: r,
+      message: "Issued Asset Fetched Successfully",
+      data: assetDataArray,
       status: true,
     });
   } catch (error) {
@@ -84,80 +168,10 @@ const test = async (req, res) => {
   }
 };
 
-// const deleteAssetCategory = async (req, res) => {
-//   try {
-//     let id = req.query;
-//     let payload = req.body;
-//     await AssetCategory.update(payload, {
-//       where: {
-//         id: id.id,
-//       },
-//     });
-//     res.status(STATUS_CODE.success).json({
-//       message: "Asset Category Deleted Successfully",
-//       status: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(STATUS_CODE.internalServerError)
-//       .json({ message: "Something went wrong, please try again!" });
-//   }
-// };
-
-// const getAssetCategory = async (req, res) => {
-//   try {
-//     let { page, limit, status } = req.query;
-//     const { count, rows } = await AssetCategory.findAndCountAll({
-//       where: { status: status },
-//       order: [["createdAt", "DESC"]],
-//       limit: Number(limit),
-//       offset: (Number(page) - 1) * Number(limit),
-//     });
-//     const assetDataArray = rows.map(
-//       (assetInstance) => assetInstance.dataValues
-//     );
-//     res.status(STATUS_CODE.success).json({
-//       message: "Asset Category Fetched Successfully",
-//       data: assetDataArray,
-//       count: count,
-//       status: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(STATUS_CODE.internalServerError)
-//       .json({ message: "Something went wrong, please try again!" });
-//   }
-// };
-// const getAssetCategoryDrop = async (req, res) => {
-//   try {
-//     const result = await AssetCategory.findAll({
-//       where: { status: true },
-//       order: [["createdAt", "DESC"]],
-//     });
-//     const assetDataArray = result.map(
-//       (assetInstance) => assetInstance.dataValues
-//     );
-//     res.status(STATUS_CODE.success).json({
-//       message: "Asset Category Fetched Successfully",
-//       data: assetDataArray,
-//       status: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(STATUS_CODE.internalServerError)
-//       .json({ message: "Something went wrong, please try again!" });
-//   }
-// };
-
 export {
   addAssetIssue,
-  test,
   getAssetIssue,
-  //   editAssetCategory,
-  //   deleteAssetCategory,
-  //   getAssetCategory,
-  //   getAssetCategoryDrop,
+  editAssetIssue,
+  resturnIssuedAsset,
+  searchAssetIssue,
 };

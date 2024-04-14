@@ -35,6 +35,10 @@ const Asset = sequelize.define("asset_master", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  asset_price: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   purchase_date: {
     type: DataTypes.DATE,
     allowNull: false,

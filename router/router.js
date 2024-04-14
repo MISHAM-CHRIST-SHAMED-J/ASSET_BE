@@ -15,7 +15,10 @@ import {
   searchEmployee,
   getEmployeeDropDown,
 } from "../controller/employeeController.js";
-import { getDashboard } from "../controller/dashboardController.js";
+import {
+  getAssetHistory,
+  getDashboard,
+} from "../controller/dashboardController.js";
 import {
   editAssetCategory,
   deleteAssetCategory,
@@ -23,12 +26,21 @@ import {
   getAssetCategoryDrop,
   addAssetCategory,
 } from "../controller/assetCategoryController.js";
-import { addAssetIssue, getAssetIssue, test } from "../controller/assetAsignController.js";
+import {
+  addAssetIssue,
+  editAssetIssue,
+  getAssetIssue,
+  resturnIssuedAsset,
+  searchAssetIssue,
+} from "../controller/assetAsignController.js";
 
 const router = express.Router();
 
 /*Dashboard_Details*/
 router.get("/get_dashboard", getDashboard);
+
+/*Asset_History*/
+router.get("/get_Asset_tHistory", getAssetHistory);
 
 /*Asset_Master*/
 router.post("/add_asset", addAsset);
@@ -56,12 +68,13 @@ router.get("/get_assetCategoryDrop", getAssetCategoryDrop);
 /*Asset_Issue*/
 router.post("/add_assetIssue", addAssetIssue);
 router.get("/get_assetIssue", getAssetIssue);
-router.get("/test", test);
+router.patch("/edit_assetIssue", editAssetIssue);
+router.patch("/return_assetIssue", resturnIssuedAsset);
+router.get("/search_assetIssue", searchAssetIssue);
 
-/*Asset_Master*/
-/*Asset_Master*/
-/*Asset_Master*/
-/*Asset_Master*/
-/*Asset_Master*/
+/*Asset_Scrap*/
+// router.post("/add_assetScrap", addAssetScrap);
+// router.get("/get_assetScrap", getAssetScrap);
+// router.patch("/edit_assetScrap", editAssetScrap);
 
 export default router;

@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import Asset from "../model/assetModel.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
+import AssetAssignment from "../model/assetAssignModel.js";
 
 const addAsset = async (req, res) => {
   try {
@@ -54,17 +55,26 @@ const getAsset = async (req, res) => {
 const getAssetDropDown = async (req, res) => {
   try {
     const rows = await Asset.findAll({
-      where: { status: true, isScrap: false },
+      where: { status: true, isScrap: false, already_issued: false },
       order: [["createdAt", "DESC"]],
     });
     const assetDataArray = rows.map(
       (assetInstance) => assetInstance.dataValues
     );
-    res.status(STATUS_CODE.success).json({
-      message: "Asset Fetched Successfully",
-      data: assetDataArray,
-      status: true,
-    });
+
+    if (Object.keys(assetDataArray).length === 0) {
+      res.status(STATUS_CODE.badRequest).json({
+        message: "Insufficient Asset",
+        data: [],
+        status: true,
+      });
+    } else {
+      res.status(STATUS_CODE.success).json({
+        message: "Asset Fetched Successfully",
+        data: assetDataArray,
+        status: true,
+      });
+    }
   } catch (error) {
     console.log(error);
     res
@@ -128,15 +138,25 @@ const deleteAsset = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Asset.update(payload, {
-      where: {
-        id: id.id,
-      },
+    const checkPoint = await AssetAssignment.findAll({
+      where: { assetRef_id: id.id, isReturned: false },
     });
-    res.status(STATUS_CODE.success).json({
-      message: "Asset Deleted Successfully",
-      status: true,
-    });
+    if (checkPoint.length > 0) {
+      res.status(STATUS_CODE.conflict).json({
+        message: "This Asset Not Reclaimed Back!",
+        status: true,
+      });
+    } else {
+      await Asset.update(payload, {
+        where: {
+          id: id.id,
+        },
+      });
+      res.status(STATUS_CODE.success).json({
+        message: "Asset Deleted Successfully",
+        status: true,
+      });
+    }
   } catch (error) {
     console.log(error);
     res
@@ -145,4 +165,11 @@ const deleteAsset = async (req, res) => {
   }
 };
 
-export { addAsset, getAsset, editAsset, deleteAsset, searchAsset,getAssetDropDown };
+export {
+  addAsset,
+  getAsset,
+  editAsset,
+  deleteAsset,
+  searchAsset,
+  getAssetDropDown,
+};

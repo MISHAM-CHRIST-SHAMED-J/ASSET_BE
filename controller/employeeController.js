@@ -1,3 +1,4 @@
+import AssetAssignment from "../model/assetAssignModel.js";
 import Employee from "../model/employeeModel.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
 import { Op } from "sequelize";
@@ -107,17 +108,37 @@ const deleteEmployee = async (req, res) => {
   try {
     let id = req.query;
     let payload = req.body;
-    await Employee.update(payload, {
-      where: {
-        id: id.id,
-      },
-    });
-    res.status(STATUS_CODE.success).json({
-      message: `Employee ${
-        payload.status ? "Activated" : "De-Activated"
-      } Successfully`,
-      status: true,
-    });
+    if (payload.status === false) {
+      const checkPoint = await AssetAssignment.findAll({
+        where: { empRef_id: id.id, isReturned: false },
+      });
+      if (checkPoint.length > 0) {
+        res.status(STATUS_CODE.conflict).json({
+          message: "Some Asset Not Reclaimed",
+          status: true,
+        });
+      } else {
+        await Employee.update(payload, {
+          where: {
+            id: id.id,
+          },
+        });
+        res.status(STATUS_CODE.success).json({
+          message: `Employee De-Activated Successfully`,
+          status: true,
+        });
+      }
+    } else {
+      await Employee.update(payload, {
+        where: {
+          id: id.id,
+        },
+      });
+      res.status(STATUS_CODE.success).json({
+        message: `Employee Activated Successfully`,
+        status: true,
+      });
+    }
   } catch (error) {
     console.log(error);
     res
