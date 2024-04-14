@@ -83,6 +83,68 @@ const getAssetDropDown = async (req, res) => {
   }
 };
 
+const getAssetDropScrap = async (req, res) => {
+  try {
+    const rows = await Asset.findAll({
+      where: { status: true, isScrap: false },
+      order: [["createdAt", "DESC"]],
+    });
+    const assetDataArray = rows.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+
+    if (Object.keys(assetDataArray).length === 0) {
+      res.status(STATUS_CODE.badRequest).json({
+        message: "Insufficient Asset",
+        data: [],
+        status: true,
+      });
+    } else {
+      res.status(STATUS_CODE.success).json({
+        message: "Asset Fetched Successfully",
+        data: assetDataArray,
+        status: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
+const getAssetDropHistory = async (req, res) => {
+  try {
+    const rows = await Asset.findAll({
+      where: { status: true },
+      order: [["createdAt", "DESC"]],
+    });
+    const assetDataArray = rows.map(
+      (assetInstance) => assetInstance.dataValues
+    );
+
+    if (Object.keys(assetDataArray).length === 0) {
+      res.status(STATUS_CODE.badRequest).json({
+        message: "Insufficient Asset",
+        data: [],
+        status: true,
+      });
+    } else {
+      res.status(STATUS_CODE.success).json({
+        message: "Asset Fetched Successfully",
+        data: assetDataArray,
+        status: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(STATUS_CODE.internalServerError)
+      .json({ message: "Something went wrong, please try again!" });
+  }
+};
+
 const searchAsset = async (req, res) => {
   try {
     let { search } = req.query;
@@ -172,4 +234,6 @@ export {
   deleteAsset,
   searchAsset,
   getAssetDropDown,
+  getAssetDropScrap,
+  getAssetDropHistory,
 };

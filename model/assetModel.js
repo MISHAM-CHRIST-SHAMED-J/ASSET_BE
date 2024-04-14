@@ -51,6 +51,22 @@ const Asset = sequelize.define("asset_master", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  reason_for_scrap: {
+    type: DataTypes.STRING,
+     allowNull: true,
+  },
+  scrap_condition: {
+    type: DataTypes.STRING,
+     allowNull: true,
+  },
+  scrapped_by: {
+    type: DataTypes.STRING,
+     allowNull: true,
+  },
+  approved_by: {
+    type: DataTypes.STRING,
+     allowNull: true,
+  },
   status: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,

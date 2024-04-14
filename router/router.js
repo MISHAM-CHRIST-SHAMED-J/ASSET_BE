@@ -5,6 +5,8 @@ import {
   editAsset,
   getAsset,
   getAssetDropDown,
+  getAssetDropHistory,
+  getAssetDropScrap,
   searchAsset,
 } from "../controller/assetController.js";
 import {
@@ -33,6 +35,13 @@ import {
   resturnIssuedAsset,
   searchAssetIssue,
 } from "../controller/assetAsignController.js";
+import {
+  searchAssetScrap,
+  deleteAssetScrap,
+  editAssetScrap,
+  addAssetScrap,
+  getAssetScrap,
+} from "../controller/assetScrapController.js";
 
 const router = express.Router();
 
@@ -49,6 +58,8 @@ router.get("/search_asset", searchAsset);
 router.patch("/edit_asset", editAsset);
 router.patch("/delete_asset", deleteAsset);
 router.get("/get_Asset_DropDown", getAssetDropDown);
+router.get("/get_Asset_Drop_History", getAssetDropHistory);
+router.get("/get_Asset_Drop_Scrap", getAssetDropScrap);
 
 /*Employee_Master*/
 router.post("/add_employee", addEmployee);
@@ -73,8 +84,10 @@ router.patch("/return_assetIssue", resturnIssuedAsset);
 router.get("/search_assetIssue", searchAssetIssue);
 
 /*Asset_Scrap*/
-// router.post("/add_assetScrap", addAssetScrap);
-// router.get("/get_assetScrap", getAssetScrap);
-// router.patch("/edit_assetScrap", editAssetScrap);
+router.get("/get_Asset_Scrap", getAssetScrap);
+router.post("/add_Asset_Scrap", addAssetScrap);
+router.patch("/edit_Asset_Scrap", editAssetScrap);
+router.patch("/delete_Asset_Scrap", deleteAssetScrap);
+router.get("/search_Asset_Scrap", searchAssetScrap);
 
 export default router;

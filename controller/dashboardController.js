@@ -27,7 +27,7 @@ const getDashboard = async (req, res) => {
         { name: "Total Asset", count: assetTotCount },
         { name: "Total Issued Asset", count: assetTotInventory },
         { name: "Total Ready To Issue", count: assetTotIssued },
-        { name: "Total Asset Cost", count: `₹ ${assetTotCost}` },
+        { name: "Total Asset Cost", count: `₹ ${assetTotCost ? assetTotCost : 0}` },
         { name: "Total Scrap", count: 10 },
         { name: "Total Employee", count: empTotCount },
       ],
