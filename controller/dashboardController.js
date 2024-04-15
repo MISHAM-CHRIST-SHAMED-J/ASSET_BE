@@ -27,12 +27,20 @@ const getDashboard = async (req, res) => {
     res.status(STATUS_CODE.success).json({
       message: "Data Fetched Successfully",
       data: [
-        { name: "Total Asset", count: assetTotCount },
-        { name: "Total Issued Asset", count: assetTotIssued },
-        { name: "Total Ready To Issue", count: assetTotInventory },
-        { name: "Total Asset Cost", count: `₹ ${assetTotCost ? assetTotCost : 0}` },
-        { name: "Total Scrap", count: scrapCount },
-        { name: "Total Employee", count: empTotCount },
+        { name: "Total Asset", count: assetTotCount, color: "inherit" },
+        { name: "Total Issued Asset", count: assetTotIssued, color: "inherit" },
+        {
+          name: "Total Ready To Issue",
+          count: assetTotInventory,
+          color: "inherit",
+        },
+        {
+          name: "Total Asset Cost",
+          count: `₹ ${assetTotCost ? assetTotCost : 0}`,
+          color: "green",
+        },
+        { name: "Total Scrap", count: scrapCount, color: "inherit" },
+        { name: "Total Employee", count: empTotCount, color: "inherit" },
       ],
 
       status: true,
@@ -57,7 +65,7 @@ const getAssetHistory = async (req, res) => {
       where: {
         assetRef_id: id.id,
       },
-      order: [["asset_issue_date", "DESC"]],
+      order: [["asset_issue_date", "ASC"]],
     });
     res.status(STATUS_CODE.success).json({
       message: "Data Fetched Successfully",
