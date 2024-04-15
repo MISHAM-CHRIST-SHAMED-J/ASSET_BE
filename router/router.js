@@ -39,7 +39,6 @@ import {
   searchAssetScrap,
   deleteAssetScrap,
   editAssetScrap,
-  addAssetScrap,
   getAssetScrap,
 } from "../controller/assetScrapController.js";
 
@@ -85,7 +84,6 @@ router.get("/search_assetIssue", searchAssetIssue);
 
 /*Asset_Scrap*/
 router.get("/get_Asset_Scrap", getAssetScrap);
-router.post("/add_Asset_Scrap", addAssetScrap);
 router.patch("/edit_Asset_Scrap", editAssetScrap);
 router.patch("/delete_Asset_Scrap", deleteAssetScrap);
 router.get("/search_Asset_Scrap", searchAssetScrap);

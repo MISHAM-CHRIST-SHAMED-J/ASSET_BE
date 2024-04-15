@@ -20,15 +20,18 @@ const getDashboard = async (req, res) => {
     const assetTotInventory = await Asset.count({
       where: { status: true, isScrap: false, already_issued: false },
     });
+    const scrapCount = await Asset.count({
+      where: { status: true, isScrap: true },
+    });
 
     res.status(STATUS_CODE.success).json({
       message: "Data Fetched Successfully",
       data: [
         { name: "Total Asset", count: assetTotCount },
-        { name: "Total Issued Asset", count: assetTotInventory },
-        { name: "Total Ready To Issue", count: assetTotIssued },
+        { name: "Total Issued Asset", count: assetTotIssued },
+        { name: "Total Ready To Issue", count: assetTotInventory },
         { name: "Total Asset Cost", count: `₹ ${assetTotCost ? assetTotCost : 0}` },
-        { name: "Total Scrap", count: 10 },
+        { name: "Total Scrap", count: scrapCount },
         { name: "Total Employee", count: empTotCount },
       ],
 

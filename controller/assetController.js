@@ -124,19 +124,11 @@ const getAssetDropHistory = async (req, res) => {
       (assetInstance) => assetInstance.dataValues
     );
 
-    if (Object.keys(assetDataArray).length === 0) {
-      res.status(STATUS_CODE.badRequest).json({
-        message: "Insufficient Asset",
-        data: [],
-        status: true,
-      });
-    } else {
-      res.status(STATUS_CODE.success).json({
-        message: "Asset Fetched Successfully",
-        data: assetDataArray,
-        status: true,
-      });
-    }
+    res.status(STATUS_CODE.success).json({
+      message: "Asset Fetched Successfully",
+      data: assetDataArray,
+      status: true,
+    });
   } catch (error) {
     console.log(error);
     res
