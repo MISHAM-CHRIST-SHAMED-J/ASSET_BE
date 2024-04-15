@@ -5,6 +5,14 @@ import { STATUS_CODE } from "../utility/statuscode.js";
 
 const getDashboard = async (req, res) => {
   try {
+    const currencyConvert = (val) => {
+      const formattedNumber = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      }).format(val);
+      const formattedCurrencyValue = formattedNumber.replace(/₹/, "₹ ");
+      return formattedCurrencyValue;
+    };
     const empTotCount = await Employee.count({
       where: { status: true },
     });
@@ -27,7 +35,7 @@ const getDashboard = async (req, res) => {
     res.status(STATUS_CODE.success).json({
       message: "Data Fetched Successfully",
       data: [
-        { name: "Total Asset", count: assetTotCount, color: "inherit" },
+        { name: "Total Asset", count: assetTotCount, color: "limegreen" },
         { name: "Total Issued Asset", count: assetTotIssued, color: "inherit" },
         {
           name: "Total Ready To Issue",
@@ -36,10 +44,12 @@ const getDashboard = async (req, res) => {
         },
         {
           name: "Total Asset Cost",
-          count: `₹ ${assetTotCost ? assetTotCost : 0}`,
+          count: `${
+            assetTotCost ? currencyConvert(assetTotCost) : currencyConvert(0)
+          }`,
           color: "green",
         },
-        { name: "Total Scrap", count: scrapCount, color: "inherit" },
+        { name: "Total Scrap", count: scrapCount, color: "red" },
         { name: "Total Employee", count: empTotCount, color: "inherit" },
       ],
 
