@@ -1,7 +1,6 @@
 import { Op } from "sequelize";
 import AssetAssignment from "../model/assetAssignModel.js";
 import Asset from "../model/assetModel.js";
-import sequelize from "../utility/database.js";
 import { STATUS_CODE } from "../utility/statuscode.js";
 
 const addAssetIssue = async (req, res) => {

@@ -5,7 +5,7 @@ import AssetMgt from "./router/router.js";
 import sequelize from "./utility/database.js";
 dotenv.config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4998;
 const app = express();
 app.use(json());
 app.use(cors({ origin: "*" }));
